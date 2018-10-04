@@ -57,7 +57,7 @@ func (h *bahamut) getQuality() (string, string) {
 
 func (h *bahamut) mergeChunk() {
     fmt.Println("Merging chunk file...please wait a moment...")
-    os.Mkdir("output", 0644)
+    os.Mkdir("output", 0755)
     exec.Command("ffmpeg", "-allowed_extensions", "ALL", "-y", "-i", "tmp/"+h.plName, "-c", "copy", "output/"+h.sn+".mp4").Run()
     fmt.Println("File location: output/" + h.sn + ".mp4")
 }

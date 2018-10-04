@@ -42,7 +42,7 @@ func (h *bahamut) getM3U8() {
 
 func (h *bahamut) downloadM3U8() {
     // Create a temporary directory for storing
-    os.Mkdir("tmp", 0644)
+    os.Mkdir("tmp", 0755)
 
     var choice string
     h.plName, choice = h.getQuality()
