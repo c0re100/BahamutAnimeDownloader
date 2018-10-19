@@ -25,7 +25,7 @@ func envCheck() {
 }
 
 func isErr(msg string, err error) {
-    f, e := os.OpenFile("error.log", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+    f, e := os.OpenFile("error.log", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0755)
     if e != nil {
         fmt.Println(err.Error())
     }
@@ -48,8 +48,6 @@ func (h *bahamut) getQuality() (string, string) {
         return h.res.s540, "540p"
     case "720p":
         return h.res.s720, "720p"
-    case "1080p":
-        return h.res.s1080, "1080p"
     default:
         return h.res.s720, "Default(720p)"
     }
@@ -58,13 +56,13 @@ func (h *bahamut) getQuality() (string, string) {
 func (h *bahamut) mergeChunk() {
     fmt.Println("Merging chunk file...please wait a moment...")
     os.Mkdir("output", 0755)
-    exec.Command("ffmpeg", "-allowed_extensions", "ALL", "-y", "-i", "tmp/"+h.plName, "-c", "copy", "output/"+h.sn+".mp4").Run()
+    exec.Command("ffmpeg", "-allowed_extensions", "ALL", "-y", "-i", h.tmp+"/"+h.plName, "-c", "copy", "output/"+h.sn+".mp4").Run()
     fmt.Println("File location: output/" + h.sn + ".mp4")
 }
 
 func (h *bahamut) cleanUp() {
     // Delete a temporary directory
-    os.RemoveAll("tmp")
+    os.RemoveAll(h.tmp)
 
     fmt.Println("Cleaned up.")
     fmt.Println(fmt.Sprintf("Total time: %ds", time.Now().Unix()-h.startTime))

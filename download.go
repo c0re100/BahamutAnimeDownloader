@@ -9,7 +9,9 @@ import (
     "net/http"
     "os"
     "path"
+    "strconv"
     "strings"
+    "time"
 
     "github.com/korovkin/limiter"
     "gopkg.in/cheggaaa/pb.v1"
@@ -42,13 +44,14 @@ func (h *bahamut) getM3U8() {
 
 func (h *bahamut) downloadM3U8() {
     // Create a temporary directory for storing
-    os.Mkdir("tmp", 0755)
+    h.tmp = "tmp" + strconv.FormatInt(time.Now().Unix(), 10)
+    os.Mkdir(h.tmp, 0755)
 
     var choice string
     h.plName, choice = h.getQuality()
     fmt.Println("Your choice:", choice)
 
-    out, err := os.Create("tmp/" + h.plName)
+    out, err := os.Create(h.tmp + "/" + h.plName)
     isErr("Create m3u8 playlist failed -", err)
 
     defer out.Close()
@@ -71,7 +74,7 @@ func (h *bahamut) downloadM3U8() {
 func (h *bahamut) downloadKey(keyUrl string) string {
     filename := strings.Split(path.Base(keyUrl), "?")[0]
 
-    out, err := os.Create("tmp/" + filename)
+    out, err := os.Create(h.tmp + "/" + filename)
     isErr("Create key file failed -", err)
 
     defer out.Close()
@@ -96,12 +99,12 @@ func (h *bahamut) downloadChunk(chuckUrl string) {
     filename := strings.Split(path.Base(chuckUrl), "?")[0]
 
     // Check chunk exist or not
-    if _, err := os.Stat("tmp/" + filename); err == nil {
+    if _, err := os.Stat(h.tmp + "/" + filename); err == nil {
         return
     }
 
     // Create a chunk file
-    out, err := os.Create("tmp/" + filename)
+    out, err := os.Create(h.tmp + "/" + filename)
     isErr("Create "+filename+" failed -", err)
 
     defer out.Close()
@@ -117,13 +120,19 @@ func (h *bahamut) downloadChunk(chuckUrl string) {
 
     defer resp.Body.Close()
     _, err = io.Copy(out, resp.Body)
-    isErr(filename+" save failed -", err)
+    if err != nil {
+        fmt.Println(filename+" save failed -", err)
+        fmt.Println("Retrying -", filename)
+        os.Remove(h.tmp + "/" + filename)
+        time.Sleep(500 * time.Millisecond)
+        h.downloadChunk(chuckUrl)
+    }
     h.bar.Increment()
 }
 
 func (h *bahamut) start() {
     h.bar = pb.StartNew(len(h.chuckList))
-    limit := limiter.NewConcurrencyLimiter(32)
+    limit := limiter.NewConcurrencyLimiter(64)
 
     for _, url := range h.chuckList {
         part := url

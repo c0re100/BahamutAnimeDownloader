@@ -18,6 +18,7 @@ type bahamut struct {
     cookie    string
     quality   string
     res       QCChoirce
+    tmp       string
 }
 
 type QCChoirce struct {
@@ -40,8 +41,13 @@ func main() {
 
     handler.getDeviceId()
     handler.gainAccess()
+    handler.Unlock()
+    handler.CheckLock()
+    handler.Unlock()
+    handler.Unlock()
     handler.startAd()
     handler.skipAd()
+    handler.VideoStart()
     handler.checkNoAd()
     handler.getM3U8()
     handler.parseMasterList()
