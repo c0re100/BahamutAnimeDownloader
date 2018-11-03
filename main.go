@@ -46,6 +46,7 @@ func main() {
     handler.Unlock()
     handler.Unlock()
     handler.startAd()
+    time.Sleep(3 * time.Second)
     handler.skipAd()
     handler.VideoStart()
     handler.checkNoAd()
