@@ -51,6 +51,7 @@ func (h *bahamut) parseMasterList() {
     req.Header.Add("cookie", "nologinuser="+h.cookie)
     req.Header.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36")
     req.Header.Add("referer", "https://ani.gamer.com.tw/animeVideo.php?sn="+h.sn)
+    req.Header.Add("origin", "https://ani.gamer.com.tw")
     resp, err := http.DefaultClient.Do(req)
     isErr("Get m3u8 playlist failed -", err)
 

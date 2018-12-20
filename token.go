@@ -29,6 +29,7 @@ func (h *bahamut) getDeviceId() {
     }
     req.Header.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36")
     req.Header.Add("referer", "https://ani.gamer.com.tw/animeVideo.php?sn="+h.sn)
+    req.Header.Add("origin", "https://ani.gamer.com.tw")
     resp, err := http.DefaultClient.Do(req)
     isErr("Get Device ID failed -", err)
 
@@ -55,6 +56,7 @@ func (h *bahamut) gainAccess() {
     req.Header.Add("cookie", "nologinuser="+h.cookie)
     req.Header.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36")
     req.Header.Add("referer", "https://ani.gamer.com.tw/animeVideo.php?sn="+h.sn)
+    req.Header.Add("origin", "https://ani.gamer.com.tw")
     resp, err := http.DefaultClient.Do(req)
     isErr("Get Token failed -", err)
 
@@ -80,6 +82,7 @@ func (h *bahamut) checkNoAd() {
     req.Header.Add("cookie", "nologinuser="+h.cookie)
     req.Header.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36")
     req.Header.Add("referer", "https://ani.gamer.com.tw/animeVideo.php?sn="+h.sn)
+    req.Header.Add("origin", "https://ani.gamer.com.tw")
     resp, err := http.DefaultClient.Do(req)
     isErr("Get Token failed -", err)
 
@@ -109,6 +112,7 @@ func (h *bahamut) startAd() {
     req.Header.Add("cookie", "nologinuser="+h.cookie)
     req.Header.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36")
     req.Header.Add("referer", "https://ani.gamer.com.tw/animeVideo.php?sn="+h.sn)
+    req.Header.Add("origin", "https://ani.gamer.com.tw")
     _, err = http.DefaultClient.Do(req)
     isErr("Start ads failed -", err)
 }
@@ -120,6 +124,7 @@ func (h *bahamut) skipAd() {
     req.Header.Add("cookie", "nologinuser="+h.cookie)
     req.Header.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36")
     req.Header.Add("referer", "https://ani.gamer.com.tw/animeVideo.php?sn="+h.sn)
+    req.Header.Add("origin", "https://ani.gamer.com.tw")
     _, err = http.DefaultClient.Do(req)
     isErr("Skip ads failed -", err)
 }
@@ -131,6 +136,7 @@ func (h *bahamut) Unlock() {
     req.Header.Add("cookie", "nologinuser="+h.cookie)
     req.Header.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36")
     req.Header.Add("referer", "https://ani.gamer.com.tw/animeVideo.php?sn="+h.sn)
+    req.Header.Add("origin", "https://ani.gamer.com.tw")
     _, err = http.DefaultClient.Do(req)
     isErr("Unlock failed -", err)
 }
@@ -142,6 +148,7 @@ func (h *bahamut) CheckLock() {
     req.Header.Add("cookie", "nologinuser="+h.cookie)
     req.Header.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36")
     req.Header.Add("referer", "https://ani.gamer.com.tw/animeVideo.php?sn="+h.sn)
+    req.Header.Add("origin", "https://ani.gamer.com.tw")
     _, err = http.DefaultClient.Do(req)
     isErr("Check Lock failed -", err)
 }
@@ -153,6 +160,7 @@ func (h *bahamut) VideoStart() {
     req.Header.Add("cookie", "nologinuser="+h.cookie)
     req.Header.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36")
     req.Header.Add("referer", "https://ani.gamer.com.tw/animeVideo.php?sn="+h.sn)
+    req.Header.Add("origin", "https://ani.gamer.com.tw")
     _, err = http.DefaultClient.Do(req)
     isErr("Video Start failed -", err)
 }

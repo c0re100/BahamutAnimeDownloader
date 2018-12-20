@@ -24,6 +24,7 @@ func (h *bahamut) getM3U8() {
     req.Header.Add("cookie", "nologinuser="+h.cookie)
     req.Header.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36")
     req.Header.Add("referer", "https://ani.gamer.com.tw/animeVideo.php?sn="+h.sn)
+    req.Header.Add("origin", "https://ani.gamer.com.tw")
     resp, err := http.DefaultClient.Do(req)
     isErr("Get m3u8 playlist failed -", err)
 
@@ -61,6 +62,7 @@ func (h *bahamut) downloadM3U8() {
     req.Header.Add("cookie", "nologinuser="+h.cookie)
     req.Header.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36")
     req.Header.Add("referer", "https://ani.gamer.com.tw/animeVideo.php?sn="+h.sn)
+    req.Header.Add("origin", "https://ani.gamer.com.tw")
     resp, err := http.DefaultClient.Do(req)
     isErr("Download m3u8 playlist failed -", err)
 
@@ -84,6 +86,7 @@ func (h *bahamut) downloadKey(keyUrl string) string {
     req.Header.Add("cookie", "nologinuser="+h.cookie)
     req.Header.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36")
     req.Header.Add("referer", "https://ani.gamer.com.tw/animeVideo.php?sn="+h.sn)
+    req.Header.Add("origin", "https://ani.gamer.com.tw")
     resp, err := http.DefaultClient.Do(req)
     isErr("Download key file failed -", err)
 
@@ -114,9 +117,16 @@ func (h *bahamut) downloadChunk(chuckUrl string) {
     req.Header.Add("cookie", "nologinuser="+h.cookie)
     req.Header.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36")
     req.Header.Add("referer", "https://ani.gamer.com.tw/animeVideo.php?sn="+h.sn)
+    req.Header.Add("origin", "https://ani.gamer.com.tw")
 
     resp, err := http.DefaultClient.Do(req)
-    isErr("Download "+filename+" file failed -", err)
+    if err != nil {
+        fmt.Println("Download "+filename+" file failed -", err)
+        fmt.Println("Retrying -", filename)
+        os.Remove(h.tmp + "/" + filename)
+        time.Sleep(500 * time.Millisecond)
+        h.downloadChunk(chuckUrl)
+    }
 
     defer resp.Body.Close()
     _, err = io.Copy(out, resp.Body)
