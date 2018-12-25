@@ -26,10 +26,9 @@ Then you can downloading the videos as fast as possible (Depending on your netwo
 ##### Video Quality Option
 You can start a program with command line argument to select quality, otherwise the default quality is 720p.
 
-`AniDownloader -quality="1080p"`
+`AniDownloader -quality="720p"`
 
 Quality
 * 360p
 * 540p
 * 720p
-* ~~1080p~~
