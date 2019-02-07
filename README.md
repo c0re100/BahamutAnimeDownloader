@@ -51,7 +51,7 @@ Quality
 `AniDownloader -quality="720p"` or `Anidownloader -q 720p`
 
 ### Cookies
-If you are the premium member and want to download 1080p video
+If you are the *premium member* and want to download 1080p video
 
 Using -c option to provide your Cookies file
 
@@ -72,3 +72,7 @@ Cookies file can be Raw cookie format or Nestscape cookie format
     .example.org	TRUE	/	FALSE	1552060831	static_files	iy1aBf1JhQR
 
 ```
+
+Then example of watching 1080p video with Cookies
+
+![example](https://i.imgur.com/aoVMUVP.png)
