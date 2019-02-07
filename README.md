@@ -53,7 +53,7 @@ Quality
 ### Cookies
 If you are the premium member and want to download 1080p video
 
-Using -c option to provid your Cookies file
+Using -c option to provide your Cookies file
 
 `AniDownloader -c cookies.txt -q 1080p`
 
