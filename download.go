@@ -9,7 +9,6 @@ import (
     "net/http"
     "os"
     "path"
-    "strconv"
     "strings"
     "time"
 
@@ -45,7 +44,7 @@ func (h *bahamut) getM3U8() {
 
 func (h *bahamut) downloadM3U8() {
     // Create a temporary directory for storing
-    h.tmp = "tmp" + strconv.FormatInt(time.Now().Unix(), 10)
+    h.tmp = "tmp" + h.sn
     os.Mkdir(h.tmp, 0755)
 
     var choice string
@@ -98,19 +97,19 @@ func (h *bahamut) downloadKey(keyUrl string) string {
     return strings.Split(path.Base(keyUrl), "?")[0]
 }
 
-func (h *bahamut) downloadChunk(chuckUrl string) {
+func (h *bahamut) downloadChunk(chuckUrl string) bool {
     filename := strings.Split(path.Base(chuckUrl), "?")[0]
 
     // Check chunk exist or not
-    if _, err := os.Stat(h.tmp + "/" + filename); err == nil {
-        return
+    fi, err := os.Stat(h.tmp + "/" + filename);
+    if err == nil && fi.Size() != 0 {
+        return true
     }
 
     // Create a chunk file
     out, err := os.Create(h.tmp + "/" + filename)
     isErr("Create "+filename+" failed -", err)
 
-    defer out.Close()
     req, err := http.NewRequest("GET", chuckUrl, nil)
     isErr("Create request failed - ", err)
 
@@ -123,21 +122,23 @@ func (h *bahamut) downloadChunk(chuckUrl string) {
     if err != nil {
         fmt.Println("Download "+filename+" file failed -", err)
         fmt.Println("Retrying -", filename)
-        os.Remove(h.tmp + "/" + filename)
+        out.Close()
+        fmt.Println(os.Remove(h.tmp + "/" + filename))
         time.Sleep(500 * time.Millisecond)
-        h.downloadChunk(chuckUrl)
+        return false
     }
 
-    defer resp.Body.Close()
     _, err = io.Copy(out, resp.Body)
     if err != nil {
         fmt.Println(filename+" save failed -", err)
         fmt.Println("Retrying -", filename)
-        os.Remove(h.tmp + "/" + filename)
+        out.Close()
+        fmt.Println(os.Remove(h.tmp + "/" + filename))
         time.Sleep(500 * time.Millisecond)
-        h.downloadChunk(chuckUrl)
+        return false
     }
-    h.bar.Increment()
+    out.Close()
+    return true
 }
 
 func (h *bahamut) start() {
@@ -147,7 +148,12 @@ func (h *bahamut) start() {
     for _, url := range h.chuckList {
         part := url
         limit.Execute(func() {
-            h.downloadChunk(part)
+            for {
+                if h.downloadChunk(part) {
+                    h.bar.Increment()
+                    break
+                }
+            }
         })
     }
     limit.Wait()
