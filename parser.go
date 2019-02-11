@@ -15,9 +15,10 @@ import (
     "github.com/grafov/m3u8"
 )
 
-func askForSN() string {
+func (h *bahamut) askForSN() {
     var sn string
 
+    sn = h.sn
     for sn == "" {
         fmt.Println("Please type anime sn id: ")
         fmt.Scanln(&sn)
@@ -41,14 +42,14 @@ func askForSN() string {
         }
     }
 
-    return sn
+    h.sn = sn
 }
 
 func (h *bahamut) parseMasterList() {
     req, err := http.NewRequest("GET", h.mUrl, nil)
     isErr("Create request failed - ", err)
 
-    req.Header.Add("cookie", "nologinuser="+h.cookie)
+    req.Header.Add("cookie", h.cookie)
     req.Header.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36")
     req.Header.Add("referer", "https://ani.gamer.com.tw/animeVideo.php?sn="+h.sn)
     req.Header.Add("origin", "https://ani.gamer.com.tw")

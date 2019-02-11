@@ -32,13 +32,18 @@ func main() {
     envCheck()
 
     handler := &bahamut{
-        sn:        askForSN(),
         startTime: time.Now().Unix(),
     }
 
+    flag.StringVar(&handler.sn, "sn", "", "set sn")
+    flag.StringVar(&handler.sn, "s", "", "set sn(shorthand)")
+    flag.StringVar(&handler.cookie, "cookie", "", "cookie") // raw cookie
+    flag.StringVar(&handler.cookie, "c", "", "cookie(shorthand)")
     flag.StringVar(&handler.quality, "quality", "720p", "set resolution")
+    flag.StringVar(&handler.quality, "q", "720p", "set resolution(shorthand)")
     flag.Parse()
 
+    handler.askForSN()
     handler.getDeviceId()
     handler.gainAccess()
     handler.Unlock()

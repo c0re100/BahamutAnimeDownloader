@@ -48,6 +48,8 @@ func (h *bahamut) getQuality() (string, string) {
         return h.res.s540, "540p"
     case "720p":
         return h.res.s720, "720p"
+    case "1080p":
+        return h.res.s1080, "1080p"
     default:
         return h.res.s720, "Default(720p)"
     }
