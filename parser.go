@@ -89,7 +89,7 @@ func (h *bahamut) parseM3U8() {
     switch listType {
     case m3u8.MEDIA:
         mediapl := pl.(*m3u8.MediaPlaylist)
-        newPl, e := m3u8.NewMediaPlaylist(mediapl.WinSize(), 1024)
+        newPl, e := m3u8.NewMediaPlaylist(mediapl.WinSize(), mediapl.Count())
         isErr("Creating new m3u8 playlist failed - ", e)
 
         prefix := strings.Split(h.mUrl, "playlist.m3u8")[0]
