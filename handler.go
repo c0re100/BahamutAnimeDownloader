@@ -25,13 +25,13 @@ func envCheck() {
 }
 
 func isErr(msg string, err error) {
-    f, e := os.OpenFile("error.log", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0755)
-    if e != nil {
-        fmt.Println(err.Error())
-    }
-
-    log.SetOutput(f)
     if err != nil {
+        f, e := os.OpenFile("error.log", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0755)
+        if e != nil {
+            fmt.Println(err.Error())
+        }
+
+        log.SetOutput(f)
         msg := msg + " " + err.Error()
         fmt.Println(msg)
         log.Println(msg)
