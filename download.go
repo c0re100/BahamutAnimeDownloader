@@ -101,7 +101,7 @@ func (h *bahamut) downloadChunk(chuckUrl string) bool {
     filename := strings.Split(path.Base(chuckUrl), "?")[0]
 
     // Check chunk exist or not
-    fi, err := os.Stat(h.tmp + "/" + filename);
+    fi, err := os.Stat(h.tmp + "/" + filename)
     if err == nil && fi.Size() != 0 {
         return true
     }
