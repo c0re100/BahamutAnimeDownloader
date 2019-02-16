@@ -107,7 +107,7 @@ func (h *bahamut) downloadChunk(chuckUrl string) bool {
         fmt.Println("Download "+filename+" file failed -", err)
         fmt.Println("Retrying -", filename)
         out.Close()
-        fmt.Println(os.Remove(h.tmp + "/" + filename))
+        os.Remove(h.tmp + "/" + filename)
         time.Sleep(500 * time.Millisecond)
         return false
     }
@@ -117,7 +117,7 @@ func (h *bahamut) downloadChunk(chuckUrl string) bool {
         fmt.Println(filename+" save failed -", err)
         fmt.Println("Retrying -", filename)
         out.Close()
-        fmt.Println(os.Remove(h.tmp + "/" + filename))
+        os.Remove(h.tmp + "/" + filename)
         time.Sleep(500 * time.Millisecond)
         return false
     }
