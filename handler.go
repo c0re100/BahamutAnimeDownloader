@@ -4,6 +4,7 @@ import (
     "errors"
     "fmt"
     "log"
+    "net/http"
     "os"
     "os/exec"
     "path/filepath"
@@ -28,15 +29,13 @@ func isErr(msg string, err error) {
     if err != nil {
         f, e := os.OpenFile("error.log", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0755)
         if e != nil {
-            fmt.Println(err.Error())
+            log.Fatal(err.Error())
         }
 
         log.SetOutput(f)
         msg := msg + " " + err.Error()
         fmt.Println(msg)
-        log.Println(msg)
-        f.Close()
-        os.Exit(1)
+        log.Fatal(msg)
     }
 }
 
@@ -53,6 +52,24 @@ func (h *bahamut) getQuality() (string, string) {
     default:
         return h.res.s720, "Default(720p)"
     }
+}
+
+func (h *bahamut) request(action, url string) *http.Response {
+    req, err := http.NewRequest("GET", url, nil)
+    if err != nil {
+        isErr("Create "+action+" request failed - ", err)
+    }
+
+    req.Header.Add("cookie", h.cookie)
+    req.Header.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.109 Safari/537.36")
+    req.Header.Add("referer", "https://ani.gamer.com.tw/animeVideo.php?sn="+h.sn)
+    req.Header.Add("origin", "https://ani.gamer.com.tw")
+    resp, err := http.DefaultClient.Do(req)
+    if err != nil {
+        isErr("Create "+action+" request failed - ", err)
+    }
+
+    return resp
 }
 
 func (h *bahamut) mergeChunk() {

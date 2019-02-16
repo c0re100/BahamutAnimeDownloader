@@ -21,7 +21,7 @@ func (h *bahamut) getM3U8() {
     isErr("Create request failed - ", err)
 
     req.Header.Add("cookie", h.cookie)
-    req.Header.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36")
+    req.Header.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.109 Safari/537.36")
     req.Header.Add("referer", "https://ani.gamer.com.tw/animeVideo.php?sn="+h.sn)
     req.Header.Add("origin", "https://ani.gamer.com.tw")
     resp, err := http.DefaultClient.Do(req)
@@ -55,15 +55,7 @@ func (h *bahamut) downloadM3U8() {
     isErr("Create m3u8 playlist failed -", err)
 
     defer out.Close()
-    req, err := http.NewRequest("GET", strings.Replace(h.mUrl, "playlist.m3u8", h.plName, -1), nil)
-    isErr("Create request failed - ", err)
-
-    req.Header.Add("cookie", h.cookie)
-    req.Header.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36")
-    req.Header.Add("referer", "https://ani.gamer.com.tw/animeVideo.php?sn="+h.sn)
-    req.Header.Add("origin", "https://ani.gamer.com.tw")
-    resp, err := http.DefaultClient.Do(req)
-    isErr("Download m3u8 playlist failed -", err)
+    resp := h.request("downloadM3U8", strings.Replace(h.mUrl, "playlist.m3u8", h.plName, -1))
 
     defer resp.Body.Close()
     _, err = io.Copy(out, resp.Body)
@@ -79,15 +71,7 @@ func (h *bahamut) downloadKey(keyUrl string) string {
     isErr("Create key file failed -", err)
 
     defer out.Close()
-    req, err := http.NewRequest("GET", keyUrl, nil)
-    isErr("Create request failed - ", err)
-
-    req.Header.Add("cookie", h.cookie)
-    req.Header.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36")
-    req.Header.Add("referer", "https://ani.gamer.com.tw/animeVideo.php?sn="+h.sn)
-    req.Header.Add("origin", "https://ani.gamer.com.tw")
-    resp, err := http.DefaultClient.Do(req)
-    isErr("Download key file failed -", err)
+    resp := h.request("downloadKey", keyUrl)
 
     defer resp.Body.Close()
     _, err = io.Copy(out, resp.Body)
@@ -114,7 +98,7 @@ func (h *bahamut) downloadChunk(chuckUrl string) bool {
     isErr("Create request failed - ", err)
 
     req.Header.Add("cookie", h.cookie)
-    req.Header.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36")
+    req.Header.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.109 Safari/537.36")
     req.Header.Add("referer", "https://ani.gamer.com.tw/animeVideo.php?sn="+h.sn)
     req.Header.Add("origin", "https://ani.gamer.com.tw")
 

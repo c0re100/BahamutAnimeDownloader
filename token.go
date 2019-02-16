@@ -3,13 +3,14 @@ package main
 import (
     "encoding/json"
     "errors"
-    "strings"
     "fmt"
     "io/ioutil"
-    "os"
     "math/rand"
     "net/http"
+    "os"
+    "strings"
     "time"
+
     "github.com/MercuryEngineering/CookieMonster"
 )
 
@@ -34,7 +35,7 @@ func (h *bahamut) getDeviceId() {
         cookies, err := cookiemonster.ParseFile(h.cookie)
         isErr("Parsing Cookie file failed -", err)
 
-        if (len(cookies) != 0) {
+        if len(cookies) != 0 {
             for _, ck := range cookies {
                 h.cookie += ck.Name + "=" + ck.Value + "; "
             }
@@ -47,7 +48,7 @@ func (h *bahamut) getDeviceId() {
         req.Header.Add("cookie", h.cookie)
     }
 
-    req.Header.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36")
+    req.Header.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.109 Safari/537.36")
     req.Header.Add("referer", "https://ani.gamer.com.tw/animeVideo.php?sn="+h.sn)
     req.Header.Add("origin", "https://ani.gamer.com.tw")
     resp, err := http.DefaultClient.Do(req)
@@ -74,15 +75,7 @@ func (h *bahamut) getDeviceId() {
 }
 
 func (h *bahamut) gainAccess() {
-    req, err := http.NewRequest("GET", "https://ani.gamer.com.tw/ajax/token.php?adID=0&sn="+h.sn+"&device="+h.deviceId+"&hash="+randomString(12), nil)
-    isErr("Create request failed - ", err)
-
-    req.Header.Add("cookie", h.cookie)
-    req.Header.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36")
-    req.Header.Add("referer", "https://ani.gamer.com.tw/animeVideo.php?sn="+h.sn)
-    req.Header.Add("origin", "https://ani.gamer.com.tw")
-    resp, err := http.DefaultClient.Do(req)
-    isErr("Get Token failed -", err)
+    resp := h.request("gainAccess", "https://ani.gamer.com.tw/ajax/token.php?adID=0&sn="+h.sn+"&device="+h.deviceId+"&hash="+randomString(12))
 
     defer resp.Body.Close()
     body, err := ioutil.ReadAll(resp.Body)
@@ -100,15 +93,7 @@ func (h *bahamut) gainAccess() {
 }
 
 func (h *bahamut) checkNoAd() {
-    req, err := http.NewRequest("GET", "https://ani.gamer.com.tw/ajax/token.php?sn="+h.sn+"&device="+h.deviceId+"&hash="+randomString(12), nil)
-    isErr("Create request failed - ", err)
-
-    req.Header.Add("cookie", h.cookie)
-    req.Header.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36")
-    req.Header.Add("referer", "https://ani.gamer.com.tw/animeVideo.php?sn="+h.sn)
-    req.Header.Add("origin", "https://ani.gamer.com.tw")
-    resp, err := http.DefaultClient.Do(req)
-    isErr("Get Token failed -", err)
+    resp := h.request("checkNoAd", "https://ani.gamer.com.tw/ajax/token.php?sn="+h.sn+"&device="+h.deviceId+"&hash="+randomString(12))
 
     defer resp.Body.Close()
     body, err := ioutil.ReadAll(resp.Body)
@@ -130,61 +115,21 @@ func (h *bahamut) checkNoAd() {
 }
 
 func (h *bahamut) startAd() {
-    req, err := http.NewRequest("GET", "https://ani.gamer.com.tw/ajax/videoCastcishu.php?sn="+h.sn+"&s=194699", nil)
-    isErr("Create skipAd request failed - ", err)
-
-    req.Header.Add("cookie", h.cookie)
-    req.Header.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36")
-    req.Header.Add("referer", "https://ani.gamer.com.tw/animeVideo.php?sn="+h.sn)
-    req.Header.Add("origin", "https://ani.gamer.com.tw")
-    _, err = http.DefaultClient.Do(req)
-    isErr("Start ads failed -", err)
+    h.request("startAd", "https://ani.gamer.com.tw/ajax/videoCastcishu.php?sn="+h.sn+"&s=194699").Body.Close()
 }
 
 func (h *bahamut) skipAd() {
-    req, err := http.NewRequest("GET", "https://ani.gamer.com.tw/ajax/videoCastcishu.php?sn="+h.sn+"&s=194699&ad=end", nil)
-    isErr("Create skipAd request failed - ", err)
-
-    req.Header.Add("cookie", h.cookie)
-    req.Header.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36")
-    req.Header.Add("referer", "https://ani.gamer.com.tw/animeVideo.php?sn="+h.sn)
-    req.Header.Add("origin", "https://ani.gamer.com.tw")
-    _, err = http.DefaultClient.Do(req)
-    isErr("Skip ads failed -", err)
+    h.request("skipAd", "https://ani.gamer.com.tw/ajax/videoCastcishu.php?sn="+h.sn+"&s=194699&ad=end").Body.Close()
 }
 
-func (h *bahamut) Unlock() {
-    req, err := http.NewRequest("GET", "https://ani.gamer.com.tw/ajax/unlock.php?sn="+h.sn+"&ttl=0", nil)
-    isErr("Create Unlock request failed - ", err)
-
-    req.Header.Add("cookie", h.cookie)
-    req.Header.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36")
-    req.Header.Add("referer", "https://ani.gamer.com.tw/animeVideo.php?sn="+h.sn)
-    req.Header.Add("origin", "https://ani.gamer.com.tw")
-    _, err = http.DefaultClient.Do(req)
-    isErr("Unlock failed -", err)
+func (h *bahamut) unlock() {
+    h.request("unlock", "https://ani.gamer.com.tw/ajax/unlock.php?sn="+h.sn+"&ttl=0").Body.Close()
 }
 
-func (h *bahamut) CheckLock() {
-    req, err := http.NewRequest("GET", "https://ani.gamer.com.tw/ajax/checklock.php?device="+h.deviceId+"sn="+h.sn, nil)
-    isErr("Create Check Lock request failed - ", err)
-
-    req.Header.Add("cookie", h.cookie)
-    req.Header.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36")
-    req.Header.Add("referer", "https://ani.gamer.com.tw/animeVideo.php?sn="+h.sn)
-    req.Header.Add("origin", "https://ani.gamer.com.tw")
-    _, err = http.DefaultClient.Do(req)
-    isErr("Check Lock failed -", err)
+func (h *bahamut) checkLock() {
+    h.request("checkLock", "https://ani.gamer.com.tw/ajax/checklock.php?device="+h.deviceId+"sn="+h.sn).Body.Close()
 }
 
-func (h *bahamut) VideoStart() {
-    req, err := http.NewRequest("GET", "https://ani.gamer.com.tw/ajax/videoStart.php?sn="+h.sn, nil)
-    isErr("Create Check Lock request failed - ", err)
-
-    req.Header.Add("cookie", h.cookie)
-    req.Header.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36")
-    req.Header.Add("referer", "https://ani.gamer.com.tw/animeVideo.php?sn="+h.sn)
-    req.Header.Add("origin", "https://ani.gamer.com.tw")
-    _, err = http.DefaultClient.Do(req)
-    isErr("Video Start failed -", err)
+func (h *bahamut) videoStart() {
+    h.request("videoStart", "https://ani.gamer.com.tw/ajax/videoStart.php?sn="+h.sn).Body.Close()
 }
