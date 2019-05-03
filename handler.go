@@ -40,18 +40,7 @@ func isErr(msg string, err error) {
 }
 
 func (h *bahamut) getQuality() (string, string) {
-    switch h.quality {
-    case "360p":
-        return h.res.s360, "360p"
-    case "540p":
-        return h.res.s540, "540p"
-    case "720p":
-        return h.res.s720, "720p"
-    case "1080p":
-        return h.res.s1080, "1080p"
-    default:
-        return h.res.s720, "Default(720p)"
-    }
+    return h.res, h.quality
 }
 
 func (h *bahamut) request(action, url string) *http.Response {
