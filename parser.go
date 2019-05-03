@@ -63,17 +63,21 @@ func (h *bahamut) parseMasterList() {
     switch listType {
     case m3u8.MASTER:
         masterpl := p.(*m3u8.MasterPlaylist)
+        var res_list []string
         for _, list := range masterpl.Variants {
-            switch list.Resolution {
-            case "640x360":
-                h.res.s360 = strings.Split(list.URI, "?")[0]
-            case "960x540":
-                h.res.s540 = strings.Split(list.URI, "?")[0]
-            case "1280x720":
-                h.res.s720 = strings.Split(list.URI, "?")[0]
-            case "1920x1080":
-                h.res.s1080 = strings.Split(list.URI, "?")[0]
+            res := strings.Split(list.Resolution, "x")[1]
+            res_list = append(res_list, res+"p")
+            if h.quality == res + "p" {
+               h.res = strings.Split(list.URI, "?")[0]
             }
+
+        }
+
+        if h.res == "" {
+            fmt.Println("Not supported resolution in this video: " + h.quality)
+            fmt.Println("Only support these resolution: ")
+            fmt.Println(res_list)
+            os.Exit(1)
         }
     }
     fmt.Println("Get m3u8 playlist.")

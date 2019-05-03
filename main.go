@@ -17,15 +17,8 @@ type bahamut struct {
     deviceId  string
     cookie    string
     quality   string
-    res       QCChoirce
+    res       string
     tmp       string
-}
-
-type QCChoirce struct {
-    s360  string
-    s540  string
-    s720  string
-    s1080 string
 }
 
 func main() {
