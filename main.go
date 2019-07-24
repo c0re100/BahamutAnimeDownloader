@@ -19,6 +19,7 @@ type bahamut struct {
     quality   string
     res       string
     tmp       string
+    isPremium bool
 }
 
 func main() {
@@ -36,18 +37,18 @@ func main() {
     flag.StringVar(&handler.quality, "q", "720p", "set resolution(shorthand)")
     flag.Parse()
 
-    isPremium := handler.cookie != ""
     handler.askForSN()
     handler.getDeviceId()
     handler.gainAccess()
+    handler.checkPremium()
     handler.unlock()
     handler.checkLock()
     handler.unlock()
     handler.unlock()
-    if !isPremium {
-	handler.startAd()
-	time.Sleep(8 * time.Second)
-	handler.skipAd()
+    if !handler.isPremium {
+	    handler.startAd()
+	    time.Sleep(8 * time.Second)
+	    handler.skipAd()
     }
     handler.videoStart()
     handler.checkNoAd()
