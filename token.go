@@ -92,6 +92,26 @@ func (h *bahamut) gainAccess() {
     }
 }
 
+func (h *bahamut) checkPremium() {
+    resp := h.request("checkPremium", "https://ani.gamer.com.tw/ajax/token.php?sn="+h.sn+"&device="+h.deviceId+"&hash="+randomString(12))
+
+    defer resp.Body.Close()
+    body, err := ioutil.ReadAll(resp.Body)
+    isErr("Read response failed -", err)
+
+    var bahaData map[string]interface{}
+    err = json.Unmarshal(body, &bahaData)
+    isErr("Parse json failed -", err)
+
+    if bahaData["vip"] != nil && bahaData["vip"].(bool) == true {
+        h.isPremium = true;
+        fmt.Println("Is Premium user")
+    } else {
+        h.isPremium = false;
+        fmt.Println("Not a Premium user")
+    }
+}
+
 func (h *bahamut) checkNoAd() {
     resp := h.request("checkNoAd", "https://ani.gamer.com.tw/ajax/token.php?sn="+h.sn+"&device="+h.deviceId+"&hash="+randomString(12))
 
