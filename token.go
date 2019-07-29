@@ -43,7 +43,7 @@ func (h *bahamut) getDeviceId() {
             data, err := ioutil.ReadFile(h.cookie)
             isErr("Read cookie file failed -", err)
             h.cookie = string(data)
-            h.cookie = strings.TrimSuffix(h.cookie, "\n")
+            h.cookie = strings.TrimRight(h.cookie, "\n\r")
         }
         req.Header.Add("cookie", h.cookie)
     }
