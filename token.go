@@ -46,7 +46,7 @@ func (h *bahamut) getDeviceId() {
 
     for _, ck := range resp.Cookies() {
         if ck.Name == "nologinuser" {
-            h.cookie = "nologinuser=" + ck.Value
+            h.rawCookie = "nologinuser=" + ck.Value
         }
     }
 }
