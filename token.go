@@ -7,11 +7,7 @@ import (
     "io/ioutil"
     "math/rand"
     "net/http"
-    "os"
-    "strings"
     "time"
-
-    "github.com/MercuryEngineering/CookieMonster"
 )
 
 func randomString(num int) string {
@@ -29,23 +25,7 @@ func (h *bahamut) getDeviceId() {
     isErr("Create request failed - ", err)
 
     if h.cookie != "" {
-        _, err := os.Stat(h.cookie)
-        isErr("Cookie file error -", err)
-
-        cookies, err := cookiemonster.ParseFile(h.cookie)
-        isErr("Parsing Cookie file failed -", err)
-
-        if len(cookies) != 0 {
-            for _, ck := range cookies {
-                h.cookie += ck.Name + "=" + ck.Value + "; "
-            }
-        } else {
-            data, err := ioutil.ReadFile(h.cookie)
-            isErr("Read cookie file failed -", err)
-            h.cookie = string(data)
-            h.cookie = strings.TrimRight(h.cookie, "\n\r")
-        }
-        req.Header.Add("cookie", h.cookie)
+        req.Header.Add("cookie", h.rawCookie)
     }
 
     req.Header.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.109 Safari/537.36")
@@ -66,9 +46,6 @@ func (h *bahamut) getDeviceId() {
 
     for _, ck := range resp.Cookies() {
         if ck.Name == "nologinuser" {
-            if h.cookie != "" {
-                isErr("Can't using Cookie -", errors.New("Your Cookie may be incorrect. "))
-            }
             h.cookie = "nologinuser=" + ck.Value
         }
     }
@@ -104,11 +81,11 @@ func (h *bahamut) checkPremium() {
     isErr("Parse json failed -", err)
 
     if bahaData["vip"] != nil && bahaData["vip"].(bool) == true {
-        h.isPremium = true;
-        fmt.Println("Is Premium user")
+        h.isPremium = true
+        fmt.Println("You're Premium user")
     } else {
-        h.isPremium = false;
-        fmt.Println("Not a Premium user")
+        h.isPremium = false
+        fmt.Println("You're not Premium user")
     }
 }
 

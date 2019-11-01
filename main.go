@@ -16,6 +16,7 @@ type bahamut struct {
     startTime int64
     deviceId  string
     cookie    string
+    rawCookie string
     quality   string
     res       string
     tmp       string
@@ -38,6 +39,8 @@ func main() {
     flag.Parse()
 
     handler.askForSN()
+    handler.readCookieFile()
+    handler.refreshCookie()
     handler.getDeviceId()
     handler.gainAccess()
     handler.checkPremium()
@@ -46,9 +49,9 @@ func main() {
     handler.unlock()
     handler.unlock()
     if !handler.isPremium {
-	    handler.startAd()
-	    time.Sleep(8 * time.Second)
-	    handler.skipAd()
+        handler.startAd()
+        time.Sleep(8 * time.Second)
+        handler.skipAd()
     }
     handler.videoStart()
     handler.checkNoAd()
