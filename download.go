@@ -36,7 +36,7 @@ func (h *bahamut) getM3U8() {
     isErr("Parse json failed -", err)
 
     if bahaData["src"].(string) != "" {
-        h.mUrl = "https:" + bahaData["src"].(string)
+        h.mUrl = bahaData["src"].(string)
     } else {
         isErr("Please try again -", errors.New("src not found"))
     }

@@ -50,7 +50,7 @@ func main() {
     handler.unlock()
     if !handler.isPremium {
         handler.startAd()
-        time.Sleep(8 * time.Second)
+        time.Sleep(20 * time.Second)
         handler.skipAd()
     }
     handler.videoStart()
