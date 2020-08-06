@@ -3,6 +3,7 @@ package main
 import (
     "flag"
     "time"
+    "strconv"
 
     "gopkg.in/cheggaaa/pb.v1"
 )
@@ -21,6 +22,7 @@ type bahamut struct {
     res       string
     tmp       string
     isPremium bool
+    time      string
 }
 
 func main() {
@@ -34,6 +36,7 @@ func main() {
     flag.StringVar(&handler.sn, "s", "", "set sn(shorthand)")
     flag.StringVar(&handler.cookie, "cookie", "", "cookie") // raw cookie
     flag.StringVar(&handler.cookie, "c", "", "cookie(shorthand)")
+    flag.StringVar(&handler.time, "t", "30", "time(shorthand)")
     flag.StringVar(&handler.quality, "quality", "720p", "set resolution")
     flag.StringVar(&handler.quality, "q", "720p", "set resolution(shorthand)")
     flag.Parse()
@@ -50,7 +53,9 @@ func main() {
     handler.unlock()
     if !handler.isPremium {
         handler.startAd()
-        time.Sleep(20 * time.Second)
+        t, err := strconv.Atoi(handler.time)
+        isErr("convert the time to integer failed - ", err)
+        time.Sleep(time.Duration(t) * time.Second)
         handler.skipAd()
     }
     handler.videoStart()
