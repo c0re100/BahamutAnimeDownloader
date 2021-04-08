@@ -76,3 +76,9 @@ Cookies file can be Raw cookie format or Nestscape cookie format
 Then example of watching 1080p video with Cookies
 
 ![example](https://i.imgur.com/aoVMUVP.png)
+
+### Output
+
+Using -o option to set output path
+
+`AniDownloader -s 10434 -q 720p -o .\Anime`

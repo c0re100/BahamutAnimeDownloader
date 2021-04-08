@@ -63,9 +63,10 @@ func (h *bahamut) request(action, url string) *http.Response {
 
 func (h *bahamut) mergeChunk() {
     fmt.Println("Merging chunk file...please wait a moment...")
-    os.Mkdir("output", 0755)
-    exec.Command("ffmpeg", "-allowed_extensions", "ALL", "-y", "-i", h.tmp+"/"+h.plName, "-c", "copy", "output/"+h.sn+".mp4").Run()
-    fmt.Println("File location: output/" + h.sn + ".mp4")
+    os.Mkdir(h.outputPath, 0755)
+    outputPath := filepath.Join(h.outputPath, h.sn+".mp4")
+    exec.Command("ffmpeg", "-allowed_extensions", "ALL", "-y", "-i", h.tmp+"/"+h.plName, "-c", "copy", outputPath).Run()
+    fmt.Println("File location: " + outputPath)
 }
 
 func (h *bahamut) cleanUp() {
@@ -73,5 +74,5 @@ func (h *bahamut) cleanUp() {
     os.RemoveAll(h.tmp)
 
     fmt.Println("Cleaned up.")
-    fmt.Println(fmt.Sprintf("Total time: %ds", time.Now().Unix()-h.startTime))
+    fmt.Printf("Total time: %ds", time.Now().Unix()-h.startTime)
 }
