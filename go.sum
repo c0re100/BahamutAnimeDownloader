@@ -1,0 +1,14 @@
+github.com/MercuryEngineering/CookieMonster v0.0.0-20180304172713-1584578b3403 h1:EtZwYyLbkEcIt+B//6sujwRCnHuTEK3qiSypAX5aJeM=
+github.com/MercuryEngineering/CookieMonster v0.0.0-20180304172713-1584578b3403/go.mod h1:mM6WvakkX2m+NgMiPCfFFjwfH4KzENC07zeGEqq9U7s=
+github.com/grafov/m3u8 v0.11.1 h1:igZ7EBIB2IAsPPazKwRKdbhxcoBKO3lO1UY57PZDeNA=
+github.com/grafov/m3u8 v0.11.1/go.mod h1:nqzOkfBiZJENr52zTVd/Dcl03yzphIMbJqkXGu+u080=
+github.com/korovkin/limiter v0.0.0-20190919045942-dac5a6b2a536 h1:QwKnpk6xFW80HVFKqiIHTzK19UF62mRWejcUr/q6z4I=
+github.com/korovkin/limiter v0.0.0-20190919045942-dac5a6b2a536/go.mod h1:bttpekv26JrhFNCYlxnxn8a1jw8Q0gi8iHe0RC4JLBg=
+github.com/mattn/go-runewidth v0.0.12 h1:Y41i/hVW3Pgwr8gV+J23B9YEY0zxjptBuCWEaxmAOow=
+github.com/mattn/go-runewidth v0.0.12/go.mod h1:RAqKPSqVFrSLVXbA8x7dzmKdmGzieGRCM46jaSJTDAk=
+github.com/rivo/uniseg v0.1.0 h1:+2KBaVoUmb9XzDsrx/Ct0W/EYOSFf/nWTauy++DprtY=
+github.com/rivo/uniseg v0.1.0/go.mod h1:J6wj4VEh+S6ZtnVlnTBMWIodfgj8LQOQFoIToxlJtxc=
+golang.org/x/sys v0.0.0-20210403161142-5e06dd20ab57 h1:F5Gozwx4I1xtr/sr/8CFbb57iKi3297KFs0QDbGN60A=
+golang.org/x/sys v0.0.0-20210403161142-5e06dd20ab57/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
+gopkg.in/cheggaaa/pb.v1 v1.0.28 h1:n1tBJnnK2r7g9OW2btFH91V92STTUevLXYFb8gy9EMk=
+gopkg.in/cheggaaa/pb.v1 v1.0.28/go.mod h1:V/YB90LKu/1FcN3WVnfiiE5oMCibMjukxqG/qStrOgw=

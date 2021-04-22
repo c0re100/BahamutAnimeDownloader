@@ -9,6 +9,7 @@ import (
     "net/http"
     "os"
     "path"
+    "path/filepath"
     "strings"
     "time"
 
@@ -44,14 +45,18 @@ func (h *bahamut) getM3U8() {
 
 func (h *bahamut) downloadM3U8() {
     // Create a temporary directory for storing
-    h.tmp = "tmp" + h.sn
-    os.Mkdir(h.tmp, 0755)
+    if h.outputPath == "output" {
+        h.tmp = "tmp" + h.sn
+    } else {
+        h.tmp = filepath.Join(h.outputPath, "tmp" + h.sn)
+    }
+    os.MkdirAll(h.tmp, 0755)
 
     var choice string
     h.plName, choice = h.getQuality()
     fmt.Println("Your choice:", choice)
 
-    out, err := os.Create(h.tmp + "/" + h.plName)
+    out, err := os.Create(filepath.Join(h.tmp, h.plName))
     isErr("Create m3u8 playlist failed -", err)
 
     defer out.Close()
@@ -67,7 +72,7 @@ func (h *bahamut) downloadM3U8() {
 func (h *bahamut) downloadKey(keyUrl string) string {
     filename := strings.Split(path.Base(keyUrl), "?")[0]
 
-    out, err := os.Create(h.tmp + "/" + filename)
+    out, err := os.Create(filepath.Join(h.tmp, filename))
     isErr("Create key file failed -", err)
 
     defer out.Close()
@@ -85,13 +90,13 @@ func (h *bahamut) downloadChunk(chuckUrl string) bool {
     filename := strings.Split(path.Base(chuckUrl), "?")[0]
 
     // Check chunk exist or not
-    fi, err := os.Stat(h.tmp + "/" + filename)
+    fi, err := os.Stat(filepath.Join(h.tmp, filename))
     if err == nil && fi.Size() != 0 {
         return true
     }
 
     // Create a chunk file
-    out, err := os.Create(h.tmp + "/" + filename)
+    out, err := os.Create(filepath.Join(h.tmp, filename))
     isErr("Create "+filename+" failed -", err)
 
     req, err := http.NewRequest("GET", chuckUrl, nil)
@@ -107,7 +112,7 @@ func (h *bahamut) downloadChunk(chuckUrl string) bool {
         fmt.Println("Download "+filename+" file failed -", err)
         fmt.Println("Retrying -", filename)
         out.Close()
-        os.Remove(h.tmp + "/" + filename)
+        os.Remove(filepath.Join(h.tmp, filename))
         time.Sleep(500 * time.Millisecond)
         return false
     }
@@ -117,7 +122,7 @@ func (h *bahamut) downloadChunk(chuckUrl string) bool {
         fmt.Println(filename+" save failed -", err)
         fmt.Println("Retrying -", filename)
         out.Close()
-        os.Remove(h.tmp + "/" + filename)
+        os.Remove(filepath.Join(h.tmp, filename))
         time.Sleep(500 * time.Millisecond)
         return false
     }

@@ -9,6 +9,7 @@ import (
     "net/url"
     "os"
     "path"
+    "path/filepath"
     "strconv"
     "strings"
 
@@ -84,7 +85,7 @@ func (h *bahamut) parseMasterList() {
 }
 
 func (h *bahamut) parseM3U8() {
-    f, err := os.Open(h.tmp + "/" + h.plName)
+    f, err := os.Open(filepath.Join(h.tmp, h.plName))
     isErr("Failed to read m3u8 playlist -", err)
 
     pl, listType, err := m3u8.DecodeFrom(bufio.NewReader(f), true)
@@ -106,7 +107,7 @@ func (h *bahamut) parseM3U8() {
         }
         newPl.Close()
 
-        ioutil.WriteFile(h.tmp+"/"+h.plName, newPl.Encode().Bytes(), 0755)
+        ioutil.WriteFile(filepath.Join(h.tmp, h.plName), newPl.Encode().Bytes(), 0755)
         fmt.Println("All segments parsed! Download is starting...")
     }
 }

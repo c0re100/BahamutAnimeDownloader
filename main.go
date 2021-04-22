@@ -2,27 +2,28 @@ package main
 
 import (
     "flag"
-    "time"
     "strconv"
+    "time"
 
     "gopkg.in/cheggaaa/pb.v1"
 )
 
 type bahamut struct {
-    sn        string
-    mUrl      string
-    plName    string
-    chuckList []string
-    bar       *pb.ProgressBar
-    startTime int64
-    deviceId  string
-    cookie    string
-    rawCookie string
-    quality   string
-    res       string
-    tmp       string
-    isPremium bool
-    time      string
+    sn         string
+    mUrl       string
+    plName     string
+    chuckList  []string
+    bar        *pb.ProgressBar
+    startTime  int64
+    deviceId   string
+    cookie     string
+    rawCookie  string
+    quality    string
+    res        string
+    tmp        string
+    isPremium  bool
+    time       string
+    outputPath string
 }
 
 func main() {
@@ -39,6 +40,7 @@ func main() {
     flag.StringVar(&handler.time, "t", "30", "time(shorthand)")
     flag.StringVar(&handler.quality, "quality", "720p", "set resolution")
     flag.StringVar(&handler.quality, "q", "720p", "set resolution(shorthand)")
+    flag.StringVar(&handler.outputPath, "o", "output", "Output Path(shorthand)")
     flag.Parse()
 
     handler.askForSN()
