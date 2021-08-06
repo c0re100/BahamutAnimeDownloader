@@ -1,5 +1,11 @@
 # Bahamut Anime Downloader
 
+
+## Important
+This tool is no longer maintained.
+
+---
+
 Download anime from [動畫瘋](https://ani.gamer.com.tw/)
 
 ## Installation
